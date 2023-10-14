@@ -1,5 +1,5 @@
 """
-Use this file to reset the data processing
+Use this file to INITIALISE or RESET the data processing 
 """
 import logging
 
