@@ -1,3 +1,4 @@
 .DS_Store
 Data/
-
+processed_input_data.csv
+processed_output_data.csv
