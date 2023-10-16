@@ -36,6 +36,10 @@ for tag in output_data['output']:
 # Convert the list of lists into a numpy array
 vectorized_output = np.array(vectorized_output)
 
+print("---- Vectorisation completed")
+
 # Save the numpy array to a file
 np.save('target.npy', vectorized_output)
+
+print("---- Target data saved")
 
