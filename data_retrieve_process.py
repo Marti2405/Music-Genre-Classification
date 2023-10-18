@@ -85,6 +85,7 @@ for chunk in pd.read_csv('./Data/song_lyrics.csv', skiprows=range(1, last_proces
     
     # declare arrays of input and output
     input_data = []
+    input_data_non_normalized = []
     output_data = []
 
     # update counters
@@ -112,6 +113,7 @@ for chunk in pd.read_csv('./Data/song_lyrics.csv', skiprows=range(1, last_proces
                 except:
                     pass
             tot_vec = sum_word_vecs/total_number_words # mean of all the vectors
+            input_data_non_normalized.append(tot_vec)
             input_data.append(tot_vec/np.linalg.norm(tot_vec)) # append the normalized vector to the inpu_data list
             ##____________________________________________________________________
 
@@ -128,6 +130,7 @@ for chunk in pd.read_csv('./Data/song_lyrics.csv', skiprows=range(1, last_proces
 
     
     np.save(f'Data/InputData/I_data_chunk_{count}.npy', np.array(input_data)) # save input data matrix
+    np.save(f'Data/InputDataNotNorm/I_data_chunk_{count}.npy', np.array(input_data_non_normalized)) # save input data matrix
     np.save(f'Data/OutputData/O_data_chunk_{count}.npy', np.array(output_data)) # save output data matrix
             
     
