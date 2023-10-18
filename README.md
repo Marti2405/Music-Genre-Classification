@@ -2,24 +2,17 @@
 
 # Work done
 
-## Data Pre-processing:
+## Data Processing:
 A data cleaning script preprocesses the song lyrics and tags.
-Processed input and output data is saved in CSV files.
-- Input (`processed_input_data.csv`) $\rightarrow$ Contains one row for each song. For each song we have a list of strings (words).
-- Ouput  (`processed_output_data.csv`) $\rightarrow$ Contains one row for each song. For each song we have the Genre tag of the song as a string.
+Processed chunks of input and output data is saved in npy files as matrixes.
+Saved in folders Data/InputData & Data/OutputData.
 
 
-## Target (output) data generation
-Script that takes the file `processed_output_data.csv` and generates a numpy file `target.npy` wich contains the vectorised tags. 
-- pop $\rightarrow$ [1,0,0]
-- rap $\rightarrow$ [0,1,0]
-- others $\rightarrow$ [0,0,1]
+
 
 
 # To do
 
-## X_target (input) data generation
-Do a script that takes the file `processed_input_data.csv` and generates a numpy file `x_train.npy` containing vectorised meaning of lyrics.
 
 ## Build Neural Network Model
 Build a tensorflow NN
