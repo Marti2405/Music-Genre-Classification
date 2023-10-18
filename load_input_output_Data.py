@@ -30,13 +30,8 @@ X = load_and_concatenate_data(input_data_folder)
 # Load and concatenate output data (labels)
 Y = load_and_concatenate_data(output_data_folder)
 
-
-shuffle_indices = np.random.permutation(len(X))
-X_shuffled = X[shuffle_indices]
-Y_shuffled = Y[shuffle_indices]
-
 # Split the data into train, validation, and test sets
-X_train, X_temp, Y_train, Y_temp = train_test_split(X_shuffled, Y_shuffled, test_size=0.2, random_state=42)
+X_train, X_temp, Y_train, Y_temp = train_test_split(X, Y, test_size=0.2, random_state=42)
 X_validate, X_test, Y_validate, Y_test = train_test_split(X_temp, Y_temp, test_size=0.5, random_state=42)
 
 save_directory = 'Data/Vectors'
