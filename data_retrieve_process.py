@@ -6,6 +6,7 @@ This file saves the last chunk processed in a log file.
 
 Content of the saved files:
     Data/InputData -> npy files containing a matrix of the input data.
+    Data/InputDataNotNorm -> npy files containing a matrix of the non normalized input data.
     Data/OutputData -> npy files containing a matrix of the output data.
 """
 
@@ -25,21 +26,6 @@ last_processed_row = START_FROM
 word2vec_model = api.load("word2vec-google-news-300")
 
 print("---- Loading of Word2Vec model completed")
-
-
-# # Load the last processed row from the log file if it exists
-# try:
-#     with open('data_processing.log', 'r') as log_file:
-#         lines = log_file.readlines()
-#         if lines:
-#             last_processed_row = int(lines[-1].split(':')[-1].strip())  # Extract the last processed row from the log file
-#         else:
-#             last_processed_row = 0
-# except FileNotFoundError:
-#     last_processed_row = 0
-
-
-logging.basicConfig(filename='data_processing.log', filemode='w', format='%(asctime)s - %(message)s', level=logging.INFO)
 
 
 
@@ -151,8 +137,7 @@ for chunk in pd.read_csv('./Data/song_lyrics.csv', skiprows=range(1, last_proces
     
     
 
-    logging.info(f"Rows processed: {count}") # save info of how many rows have been processed
-    print(f"Rows processed: {count}") # print how many rows have been processed
+    print(f"Number of rows processed: {count}") # print how many rows have been processed
 
     break
 
