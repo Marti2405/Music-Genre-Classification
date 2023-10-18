@@ -14,8 +14,12 @@ import numpy as np
 import pandas as pd
 import gensim.downloader as api
 from nltk.corpus import stopwords
+import time
 
 
+
+START_FROM = int(input("Start from: "))
+last_processed_row = START_FROM
 
 # Load the Word2Vec model
 word2vec_model = api.load("word2vec-google-news-300")
@@ -23,16 +27,16 @@ word2vec_model = api.load("word2vec-google-news-300")
 print("---- Loading of Word2Vec model completed")
 
 
-# Load the last processed row from the log file if it exists
-try:
-    with open('data_processing.log', 'r') as log_file:
-        lines = log_file.readlines()
-        if lines:
-            last_processed_row = int(lines[-1].split(':')[-1].strip())  # Extract the last processed row from the log file
-        else:
-            last_processed_row = 0
-except FileNotFoundError:
-    last_processed_row = 0
+# # Load the last processed row from the log file if it exists
+# try:
+#     with open('data_processing.log', 'r') as log_file:
+#         lines = log_file.readlines()
+#         if lines:
+#             last_processed_row = int(lines[-1].split(':')[-1].strip())  # Extract the last processed row from the log file
+#         else:
+#             last_processed_row = 0
+# except FileNotFoundError:
+#     last_processed_row = 0
 
 
 logging.basicConfig(filename='data_processing.log', filemode='w', format='%(asctime)s - %(message)s', level=logging.INFO)
@@ -67,7 +71,7 @@ def data_clean(text):
 
 
 # Define chunk size (size of part readed and processed from the file)
-chunk_size = 1000000
+chunk_size = 250000
 print(f"---- Chunk size = {chunk_size}")
 
 
@@ -78,9 +82,10 @@ other_vector = np.array(([0, 0, 1]))
 
 # Define the counter for the number of songs processed
 count = last_processed_row
-progress = 0
+progress = START_FROM
 print(f"---- Starting from {count}")
 
+timed = time.time()
 # Iterate through the CSV file in chunks
 # for chunk in pd.read_csv('./Data/song_lyrics.csv', skiprows=range(1, last_processed_row), chunksize=chunk_size): 
 for chunk in pd.read_csv('./Data/song_lyrics.csv', skiprows=range(1, 0), chunksize=chunk_size): 
@@ -99,7 +104,8 @@ for chunk in pd.read_csv('./Data/song_lyrics.csv', skiprows=range(1, 0), chunksi
         # Show progress
         progress+=1
         if progress%500==0:
-            print(f"Progress -> {progress}")
+            print(f"Progress -> {progress} || Time taken -> {round(time.time()-timed,2)}")
+            timed = time.time()
 
 
         # Process each row
@@ -142,6 +148,10 @@ for chunk in pd.read_csv('./Data/song_lyrics.csv', skiprows=range(1, 0), chunksi
 
     logging.info(f"Rows processed: {count}") # save info of how many rows have been processed
     print(f"Rows processed: {count}") # print how many rows have been processed
+
+    break
+
+print("DONE. CHUNK COMPLETED!!!")
     
     
 
