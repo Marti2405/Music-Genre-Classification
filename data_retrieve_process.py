@@ -82,7 +82,8 @@ progress = 0
 print(f"---- Starting from {count}")
 
 # Iterate through the CSV file in chunks
-for chunk in pd.read_csv('./Data/song_lyrics.csv', skiprows=range(1, last_processed_row), chunksize=chunk_size): 
+# for chunk in pd.read_csv('./Data/song_lyrics.csv', skiprows=range(1, last_processed_row), chunksize=chunk_size): 
+for chunk in pd.read_csv('./Data/song_lyrics.csv', skiprows=range(1, 0), chunksize=chunk_size): 
     
     # declare arrays of input and output
     input_data = []
