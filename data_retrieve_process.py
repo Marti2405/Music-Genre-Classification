@@ -78,6 +78,7 @@ other_vector = np.array(([0, 0, 1]))
 
 # Define the counter for the number of songs processed
 count = last_processed_row
+progress = 0
 print(f"---- Starting from {count}")
 
 # Iterate through the CSV file in chunks
@@ -94,8 +95,10 @@ for chunk in pd.read_csv('./Data/song_lyrics.csv', skiprows=range(1, last_proces
     # for each row (song)
     for index, row in chunk.iterrows():
         
-        if index%500==0:
-            print(f"---- Iter n°{index}")
+        # Show progress
+        progress+=1
+        if progress%500==0:
+            print(f"Progress -> {progress}")
 
 
         # Process each row
