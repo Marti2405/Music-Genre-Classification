@@ -26,9 +26,6 @@ X = load_and_concatenate_data(input_data_folder)
 Y = load_and_concatenate_data(output_data_folder)
 
 
-# np.save('Data/InputData/I_data_chunk_250000.npy', X)
-
-
 shuffle_indices = np.random.permutation(len(X))
 X_shuffled = X[shuffle_indices]
 Y_shuffled = Y[shuffle_indices]
