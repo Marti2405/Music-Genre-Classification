@@ -1,6 +1,6 @@
 import numpy as np
 
-
+# X_train, Y_train, X_test, Y_test, X_validate, Y_validate
 
 # Chunk list
 chunk_list = []
