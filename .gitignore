@@ -3,3 +3,4 @@ Data/
 processed_input_data.csv
 processed_output_data.csv
 music-genre-venv/
+data_processing.log
