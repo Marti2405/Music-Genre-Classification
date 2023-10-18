@@ -1,5 +1,8 @@
+"""
+This file loads all the input and output data chunks and saves them in the Data/Vector directory
+as a train/test/validation dataset (80/10/10).
+"""
 import numpy as np
-
 import os
 import numpy as np
 from sklearn.model_selection import train_test_split
