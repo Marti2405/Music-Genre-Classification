@@ -5,6 +5,7 @@ import numpy as np
 from sklearn.model_selection import train_test_split
 
 # Paths to the input and output data folders
+# input_data_folder = 'Data/InputDataNotNorm'
 input_data_folder = 'Data/InputData'
 output_data_folder = 'Data/OutputData'
 
@@ -21,6 +22,7 @@ def load_and_concatenate_data(folder_path):
 
 # Load and concatenate input data
 X = load_and_concatenate_data(input_data_folder)
+
 
 # Load and concatenate output data (labels)
 Y = load_and_concatenate_data(output_data_folder)
