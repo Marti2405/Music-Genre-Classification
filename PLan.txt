@@ -1,0 +1,57 @@
+BROUILLON:
+
+
+Introduction:
+	
+- Objective: Our research focuses on utilizing song lyrics to develop a robust music genre classification system that enhances user experience in music streaming platforms and digital libraries.
+- Significance: With the exponential growth of digital music libraries, effective genre classification has become crucial in enhancing user experience and personalization in music streaming platforms. We aim to improve the accuracy of genre classification, enabling more precise music recommendations.
+- Problem Statement: "Can the genre of a song be accurately predicted based solely on the analysis of its lyrical content?"
+
+
+Methodology:
+
+- Data Collection: A dataset of song lyrics with corresponding genre labels was obtained from various sources.
+- Data Preprocessing: The lyrics were preprocessed to remove metadata, stopwords, and punctuation. Additionally, stemming and tokenization were performed to standardize the text data.
+- Feature Engineering: Several methods were explored to represent the text data as numerical vectors, including Doc2Vec, TF-IDF, and Word2Vec.
+- Model Development: A neural network was designed using TensorFlow, with various architectures and activation functions tested to optimize the classification accuracy.
+- Data Splitting and Evaluation: The dataset was split into training, testing, and validation sets using techniques like cross-validation. Model performance was evaluated using metrics such as accuracy, precision, and recall.
+
+
+Results:
+
+Brief Description: This section will summarize the key findings and outcomes of your music genre classification project.
+
+- Data Preprocessing: Describe the steps taken to clean and prepare the dataset, emphasizing how lyrics were processed.
+
+- Machine Learning Models: Discuss the machine learning models used for classification and their performance.
+
+- Evaluation Metrics: Present the evaluation metrics used to assess model performance, such as accuracy, precision, recall, and F1-score.
+
+- Accuracy: Highlight the overall accuracy achieved in classifying music genres based on lyrics.
+
+- Confusion Matrix: Provide a visual representation of the model's performance in terms of true positives, true negatives, false positives, and false negatives.
+
+- Training vs. Testing: Compare the model's performance on the training and testing datasets, indicating any overfitting or underfitting.
+
+- Comparison: If you tried different models or variations, include a comparison of their performance.
+
+- Limitations: Mention any challenges or limitations encountered during the project.
+
+
+
+Conclusion:
+
+Brief Summary: This section will provide a concise overview of the key takeaways and insights from your music genre classification project.
+
+- Achievements: Discuss the success of the project in accurately predicting music genres based solely on lyrics.
+
+- Data Importance: Emphasize the significance of the role of lyrics in determining music genres, highlighting the importance of textual analysis in music classification tasks.
+
+- Model Performance: Reflect on the performance of the machine learning models employed and their effectiveness in handling the classification task.
+
+- Potential Applications: Outline potential real-world applications for the developed model, such as automated genre tagging for large music databases or recommendation systems.
+
+
+Future Work: 
+
+Suggest avenues for future research, including possible enhancements to the existing model, exploring other data sources for a comprehensive analysis, or applying the model to other similar tasks.
