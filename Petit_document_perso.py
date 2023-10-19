@@ -6,7 +6,7 @@ def get_vectors_info():
     file_path = 'Data/Vectors/'
 
     # Load the Y_train vector from the file
-    Y_total = np.load('Data/OutputData/O_data_chunk_250000.npy')
+    Y_total = np.load('Data/OutputData/O_data_chunk_250000.npy') # concatenate everything
     Y_train = np.load(file_path + 'Y_train.npy')
     Y_test = np.load(file_path + 'Y_test.npy')
     Y_validate = np.load(file_path + 'Y_validate.npy')
@@ -57,5 +57,44 @@ def get_global_counts():
         print(f"Tag: {tag}, Count: {count}")
 
 
-get_vectors_info()
+def remove_nans_in_vector(remove):
+    folder_path = 'Data/Vectors/'
+
+    file_paths = [folder_path + 'X_train.npy'
+                  , folder_path + 'X_test.npy'
+                  , folder_path + 'X_validate.npy'
+                  , folder_path + 'Y_train.npy'
+                  , folder_path + 'Y_test.npy'
+                  , folder_path + 'Y_validate.npy']
+
+    for i in range(len(file_paths)):
+        vector_file = file_paths[i]
+
+        array = np.load(vector_file)
+
+        nan_indices = np.where(np.isnan(array).any(axis=1))[0]
+
+        if len(nan_indices) > 0:
+            print("Indexes of vectors containing NaN values in ", vector_file)
+            for index in nan_indices:
+                print(index)
+
+                if remove:
+                    # Replace NaN vector with a ero vector of same shape
+                    zeros_vector = np.zeros(array.shape[1])
+                    array[index] = zeros_vector
+
+            if remove:
+                # Save the modified array
+                np.save(vector_file, array)
+
+        else:
+            print("No vectors contain NaN values in ", vector_file)
+
+
+
+
+# get_vectors_info()
 # get_global_counts()
+remove_nans_in_vector(remove=True)
+
