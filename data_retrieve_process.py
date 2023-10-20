@@ -50,9 +50,9 @@ def data_clean(text):
 
     
 
-def process_data(start_row=START_FROM, chunk_size=250000, process_input=True ,process_output=True):
-    # Define chunk size (size of part readed and processed from the file)
-    print(f"---- Chunk size = {chunk_size}")
+def process_data(start_row=START_FROM, chunk_size=250000, process_input=True ,process_output=True, verbose=True):
+    if verbose:
+        print(f"---- Chunk size = {chunk_size}")
 
 
     # Define the vectors for "rap", "pop" and others
@@ -66,14 +66,16 @@ def process_data(start_row=START_FROM, chunk_size=250000, process_input=True ,pr
     # Define the counter for the number of songs processed
     count = start_row
     progress = start_row
-    print(f"---- Starting from {count}")
+    if verbose:
+        print(f"---- Starting from {count}")
 
     word2vec_model = None
     
     if process_input:
         # Load the Word2Vec model only if input has to be processed
         word2vec_model = api.load("word2vec-google-news-300")
-        print("---- Loading of Word2Vec model completed")
+        if verbose:
+            print("---- Loading of Word2Vec model completed")
 
 
     timed = time.time()
@@ -96,8 +98,9 @@ def process_data(start_row=START_FROM, chunk_size=250000, process_input=True ,pr
             # Show progress
             progress+=1
             if progress%500==0:
-                print(f"Progress -> {progress} || Time taken -> {round(time.time()-timed,2)}")
-                timed = time.time()
+                if verbose:
+                    print(f"Progress -> {progress} || Time taken -> {round(time.time()-timed,2)}")
+                    timed = time.time()
 
 
             # Process each row
@@ -147,13 +150,12 @@ def process_data(start_row=START_FROM, chunk_size=250000, process_input=True ,pr
             np.save(f'Data/InputData/I_data_chunk_{count}.npy', np.array(input_data)) # save input data matrix
             np.save(f'Data/InputDataNotNorm/I_data_chunk_{count}.npy', np.array(input_data_non_normalized)) # save input data matrix
         if process_output:
-            # np.save(f'Data/OutputData/O_data_chunk_{count}.npy', np.array(output_data)) # save output data matrix
-            np.save(f'Data/OutputDataExtended/O_data_chunk_{count}.npy', np.array(output_data)) # save output data matrix
+            np.save(f'Data/OutputData/O_data_chunk_{count}.npy', np.array(output_data)) # save output data matrix
                 
         
         
 
-        print(f"Number of rows processed: {count}") # print how many rows have been processed
+        print(f"Number of rows processed: from {start_row} to {count} = {(count-start_row)}") # print how many rows have been processed
 
         break
 
@@ -165,25 +167,25 @@ def process_data(start_row=START_FROM, chunk_size=250000, process_input=True ,pr
 # ______________________________EXECUTION OF THE FUNCTIONS________________________________________________
 
 
-# Call function wich will process only the output and start at row 0
-process_data(start_row=0, chunk_size=250000, process_input=False, process_output=True)
+# Call function wich will process only the output and start at the row given as global argument
+# process_data(chunk_size=250000, process_input=False, process_output=True)
 
 
 # Multi threaded Approach
-# starting_indexes = [0, 250000, 1000000, 2000000, 3000000, 4000000]
+starting_indexes = [0, 1000000, 2000000, 3000000, 4000000]
 
-# def process_data_threaded(start_row):
-#     process_data(start_row=start_row, chunk_size=250000, process_input=False, process_output=True)
+def process_data_threaded(start_row):
+    process_data(start_row=start_row, chunk_size=250000, process_input=False, process_output=True, verbose=False)
 
-# threads = []
+threads = []
 
-# for starting_index in starting_indexes:
-#     thread = threading.Thread(target=process_data_threaded, args=(starting_index,))
-#     threads.append(thread)
-#     thread.start()
+for starting_index in starting_indexes:
+    thread = threading.Thread(target=process_data_threaded, args=(starting_index,))
+    threads.append(thread)
+    thread.start()
 
-# # Wait for all threads to finish
-# for thread in threads:
-#     thread.join()
+# Wait for all threads to finish
+for thread in threads:
+    thread.join()
 
-# print("DONE!")
+print("DONE!")
