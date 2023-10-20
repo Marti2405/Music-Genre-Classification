@@ -21,7 +21,6 @@ import threading
 
 
 START_FROM = int(input("Start from: "))
-last_processed_row = START_FROM
 
 
 def data_clean(text): 
@@ -81,8 +80,7 @@ def process_data(start_row=START_FROM, chunk_size=250000, process_input=True ,pr
     timed = time.time()
 
     # Iterate through the CSV file in chunks
-    # for chunk in pd.read_csv('./Data/song_lyrics.csv', skiprows=range(1, last_processed_row), chunksize=chunk_size): 
-    for chunk in pd.read_csv('./Data/song_lyrics.csv', skiprows=range(1, last_processed_row), chunksize=chunk_size): 
+    for chunk in pd.read_csv('./Data/song_lyrics.csv', skiprows=range(1, start_row), chunksize=chunk_size): 
         
         # declare arrays of input and output
         input_data = []
@@ -150,12 +148,11 @@ def process_data(start_row=START_FROM, chunk_size=250000, process_input=True ,pr
             np.save(f'Data/InputData/I_data_chunk_{count}.npy', np.array(input_data)) # save input data matrix
             np.save(f'Data/InputDataNotNorm/I_data_chunk_{count}.npy', np.array(input_data_non_normalized)) # save input data matrix
         if process_output:
-            np.save(f'Data/OutputData/O_data_chunk_{count}.npy', np.array(output_data)) # save output data matrix
-                
-        
+            np.save(f'Data/OutputData/O_data_chunk_{count}.npy', np.array(output_data)) # save output data matrix    
         
 
         print(f"Number of rows processed: from {start_row} to {count} = {(count-start_row)}") # print how many rows have been processed
+        
 
         break
 
