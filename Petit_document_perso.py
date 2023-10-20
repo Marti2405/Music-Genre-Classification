@@ -1,12 +1,21 @@
 import numpy as np
 import pandas as pd
+import os
 
 
 def get_vectors_info():
     file_path = 'Data/Vectors/'
 
-    # Load the Y_train vector from the file
-    Y_total = np.load('Data/OutputData/O_data_chunk_250000.npy') # concatenate everything
+    # Load all the output vectors
+    data_list = []
+    folder_path = 'Data/OutputData'
+    for file_name in os.listdir(folder_path):
+        if file_name.endswith('.npy'):
+            file_path2 = os.path.join(folder_path, file_name)
+            data = np.load(file_path2)
+            data_list.append(data)
+
+    Y_total = np.concatenate(data_list, axis=0)
     Y_train = np.load(file_path + 'Y_train.npy')
     Y_test = np.load(file_path + 'Y_test.npy')
     Y_validate = np.load(file_path + 'Y_validate.npy')
@@ -15,9 +24,11 @@ def get_vectors_info():
     vector_names = ['Total', 'Train', 'Test', 'Validate']
 
     class_labels = ['pop', 'rap', 'others']
+    class_labels = ['pop', 'rap', 'rock', 'rb', 'country', 'others']
+
 
     for vector, vector_name in zip(vectors, vector_names):
-        print('\n', vector_name)
+        print('\n', vector_name, ": ", vector.shape[0])
         # Sum for each class
         class_sums = np.sum(vector, axis=0)
 
@@ -27,11 +38,12 @@ def get_vectors_info():
 
         # Create a dictionary to map labels to percentages
         class_percentage_dict = {label: percentage for label, percentage in zip(class_labels, class_percentages)}
+        class_count_dict = {label: percentage for label, percentage in zip(class_labels, class_sums)}
 
         # Print the class and its percentage
 
         for label in class_labels:
-            print(f'{label}: {class_percentage_dict[label]:.2f}%')
+            print(f'{label}: {class_percentage_dict[label]:.2f}%, count: {class_count_dict[label]}')
 
 
 
@@ -94,7 +106,7 @@ def remove_nans_in_vector(remove):
 
 
 
-# get_vectors_info()
+get_vectors_info()
 # get_global_counts()
-remove_nans_in_vector(remove=True)
+# remove_nans_in_vector(remove=True)
 
