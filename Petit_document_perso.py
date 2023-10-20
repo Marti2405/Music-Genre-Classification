@@ -3,8 +3,8 @@ import pandas as pd
 import os
 
 
-def get_vectors_info():
-    file_path = 'Data/Vectors/'
+def get_vectors_info(vector_folder):
+    file_path = vector_folder
 
     # Load all the output vectors
     data_list = []
@@ -106,7 +106,7 @@ def remove_nans_in_vector(remove):
 
 
 
-get_vectors_info()
+get_vectors_info("Data/VectorsBalanced/")
 # get_global_counts()
 # remove_nans_in_vector(remove=True)
 
