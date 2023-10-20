@@ -170,22 +170,26 @@ def process_data(start_row=START_FROM, chunk_size=250000, process_input=True ,pr
 # Call function wich will process only the output and start at the row given as global argument
 # process_data(chunk_size=250000, process_input=False, process_output=True)
 
+starting_indexes = [0, 1000000, 2000000, 3000000, 4000000]
+for starting_index in starting_indexes:
+    process_data(start_row=starting_index, chunk_size=250000, process_input=False, process_output=True, verbose=True)
+
 
 # Multi threaded Approach
-starting_indexes = [0, 1000000, 2000000, 3000000, 4000000]
+# starting_indexes = [0, 1000000, 2000000, 3000000, 4000000]
 
-def process_data_threaded(start_row):
-    process_data(start_row=start_row, chunk_size=250000, process_input=False, process_output=True, verbose=False)
+# def process_data_threaded(start_row):
+#     process_data(start_row=start_row, chunk_size=250000, process_input=False, process_output=True, verbose=False)
 
-threads = []
+# threads = []
 
-for starting_index in starting_indexes:
-    thread = threading.Thread(target=process_data_threaded, args=(starting_index,))
-    threads.append(thread)
-    thread.start()
+# for starting_index in starting_indexes:
+#     thread = threading.Thread(target=process_data_threaded, args=(starting_index,))
+#     threads.append(thread)
+#     thread.start()
 
-# Wait for all threads to finish
-for thread in threads:
-    thread.join()
+# # Wait for all threads to finish
+# for thread in threads:
+#     thread.join()
 
 print("DONE!")
