@@ -202,4 +202,4 @@ words = nltk.tokenize.wordpunct_tokenize("")
 folder_path = "Data/VectorsBalanced_PopRapCountry/"
 # get_vectors_info(folder_path)
 # get_global_counts() #Broken!
-remove_nans_in_vector(folder_path, remove=True) # List the indices without removing
+# remove_nans_in_vector(folder_path, remove=True) # List the indices without removing

@@ -17,11 +17,11 @@ import gensim.downloader as api
 from nltk.corpus import stopwords
 import time
 import threading
+import os
 
 
 
 START_FROM = int(input("Start from: "))
-
 
 def data_clean(text):
     """
@@ -148,9 +148,9 @@ def process_data(start_row=START_FROM, chunk_size=250000, verbose=True):
                         output_data.append(other_vector)
                     ##____________________________________________________________________
 
-        np.save(f'Data/InputData/I_data_chunk_{count}.npy', np.array(input_data)) # save input data matrix
-        np.save(f'Data/InputDataNotNorm/I_data_chunk_{count}.npy', np.array(input_data_non_normalized)) # save input data matrix
-        np.save(f'Data/OutputData/O_data_chunk_{count}.npy', np.array(output_data)) # save output data matrix    
+        np.save(f'{save_directories[0]}/I_data_chunk_{count}.npy', np.array(input_data)) # save input data matrix
+        np.save(f'{save_directories[1]}/I_data_chunk_{count}.npy', np.array(input_data_non_normalized)) # save input data matrix
+        np.save(f'{save_directories[2]}/O_data_chunk_{count}.npy', np.array(output_data)) # save output data matrix    
         
 
         print(f"Number of rows processed: from {start_row} to {count} = {(count-start_row)}") # print how many rows have been processed
@@ -163,11 +163,37 @@ def process_data(start_row=START_FROM, chunk_size=250000, verbose=True):
 
 
 
+# Helper function to calculate the starting indexes for multithreading the whole set
+def get_starting_indexes(goal=5000000, chunksize=250000, threads=5):
+    starting_indexes = []
+
+    adder = goal/threads
+    i=0
+
+    while (threads*i) < goal:
+        k = i
+        indexes = []
+        while k < goal:
+            indexes.append(int(k))
+            k += adder
+        i += chunksize
+        starting_indexes.append(indexes)
+
+    return starting_indexes
+
+
+
 # ______________________________EXECUTION OF THE FUNCTIONS________________________________________________
+# Directories where all the output will be saved
+save_directories = ['Data/InputData_Complete', 
+                   'Data/InputData_Complete_NotNorm',
+                   'Data/OutputData_Complete']
+for directory in save_directories:
+    os.makedirs(directory, exist_ok=True)
 
 
 # Call function wich will process only the output and start at the row given as global argument
-process_data(chunk_size=250000, process_input=True, process_output=True, verbose=True)
+# process_data(chunk_size=250000, process_input=True, process_output=True, verbose=True)
 
 # starting_indexes = [0, 1000000, 2000000, 3000000, 4000000]
 # for starting_index in starting_indexes:
@@ -175,22 +201,22 @@ process_data(chunk_size=250000, process_input=True, process_output=True, verbose
 
 
 # Multi threaded Approach
-# starting_indexes = [0, 1000000, 2000000, 3000000, 4000000] # Done
-# starting_indexes = [250000, 1250000, 2250000, 3250000, 3500000, 4250000] # Full of NaN ?
-# # starting_indexes = [500000, 1750000, 2750000, 3750000, 4750000, 5000000]
 
-# def process_data_threaded(start_row):
-#     process_data(start_row=start_row, chunk_size=250000, process_input=True, process_output=True, verbose=False)
+starting_2d = get_starting_indexes(chunksize=50000, threads=8)
 
-# threads = []
+for serie in starting_2d:
+    def process_data_threaded(start_row):
+        process_data(start_row=start_row, chunk_size=250000, process_input=True, process_output=True, verbose=False)
 
-# for starting_index in starting_indexes:
-#     thread = threading.Thread(target=process_data_threaded, args=(starting_index,))
-#     threads.append(thread)
-#     thread.start()
+    threads = []
 
-# # Wait for all threads to finish
-# for thread in threads:
-#     thread.join()
+    for starting_index in serie:
+        thread = threading.Thread(target=process_data_threaded, args=(starting_index,))
+        threads.append(thread)
+        thread.start()
 
-# print("DONE!")
+    # Wait for all threads to finish
+    for thread in threads:
+        thread.join()
+
+    print("\n\n!!!DONE!!! \n\n", serie, "\n\n\n")
