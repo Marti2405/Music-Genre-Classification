@@ -10,7 +10,7 @@ def get_vectors_info(vector_folder):
 
     # Load all the output vectors
     data_list = []
-    folder_path = 'Data/OutputData_V2'
+    folder_path = 'Data/OutputData'
     for file_name in os.listdir(folder_path):
         if file_name.endswith('.npy'):
             file_path2 = os.path.join(folder_path, file_name)
@@ -199,7 +199,7 @@ words = nltk.tokenize.wordpunct_tokenize("")
 
 
 
-folder_path = "Data/VectorsTest/"
+folder_path = "Data/VectorsBalanced_PopRapCountry/"
 # get_vectors_info(folder_path)
 # get_global_counts() #Broken!
-# remove_nans_in_vector(folder_path, remove=False) # List the indices without removing
+remove_nans_in_vector(folder_path, remove=True) # List the indices without removing
