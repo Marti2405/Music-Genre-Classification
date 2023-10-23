@@ -23,6 +23,11 @@ import os
 
 START_FROM = int(input("Start from: "))
 
+word2vec_model = api.load("word2vec-google-news-300")
+print("---- Loading of Word2Vec model completed")
+
+
+
 def data_clean(text):
     """
     Cleans the input text by removing metadata, stopwords, and punctuation.
@@ -47,13 +52,11 @@ def data_clean(text):
 
     return text_result
 
-word2vec_model = None
-# For concurrent program, load w2v only once
-word2vec_model = api.load("word2vec-google-news-300")
-print("---- Loading of Word2Vec model completed")
-word2vec_is_loaded = True
+
+
 
 def process_data(start_row=START_FROM, chunk_size=250000, verbose=True):
+    empty_songs_counter = 0
     if verbose:
         print(f"---- Chunk size = {chunk_size}")
 
@@ -71,15 +74,6 @@ def process_data(start_row=START_FROM, chunk_size=250000, verbose=True):
     progress = start_row
     if verbose:
         print(f"---- Starting from {count}")
-
-    word2vec_model = None
-    
-    
-    # Load the Word2Vec model
-    if not word2vec_is_loaded:
-        word2vec_model = api.load("word2vec-google-news-300")
-        if verbose:
-            print("---- Loading of Word2Vec model completed")
 
 
     timed = time.time()
@@ -116,11 +110,12 @@ def process_data(start_row=START_FROM, chunk_size=250000, verbose=True):
                 total_number_words = 0 # number of words transformed to vectors
 
                 for word_to_vectorize in data_clean(row['lyrics']): # for each word in the cleaned, tokenized list from the lyrics
+                    # print(word_to_vectorize)
                     try: # vectorise the word
                         sum_word_vecs+= word2vec_model[word_to_vectorize]
                         total_number_words+=1
-                    except:
-                        pass
+                    except Exception as e:
+                        print(f"failed on: {word_to_vectorize} error: {e}")
 
                 if total_number_words>=10: # if the lyrics contain more than 10 words
                     
@@ -147,6 +142,9 @@ def process_data(start_row=START_FROM, chunk_size=250000, verbose=True):
                     else:
                         output_data.append(other_vector)
                     ##____________________________________________________________________
+                else:
+                    print(f"Not enough words: {progress}, found only {total_number_words}")
+                    empty_songs_counter +=1
 
         np.save(f'{save_directories[0]}/I_data_chunk_{count}.npy', np.array(input_data)) # save input data matrix
         np.save(f'{save_directories[1]}/I_data_chunk_{count}.npy', np.array(input_data_non_normalized)) # save input data matrix
@@ -154,6 +152,7 @@ def process_data(start_row=START_FROM, chunk_size=250000, verbose=True):
         
 
         print(f"Number of rows processed: from {start_row} to {count} = {(count-start_row)}") # print how many rows have been processed
+        print(f"Number of empty songs encountered: {empty_songs_counter}")
 
 
         break # §§§§§§§§§§§§§§§§§§§§§§    REMOVE WHEN REVIEWING  §§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§"""
@@ -193,30 +192,46 @@ for directory in save_directories:
 
 
 # Call function wich will process only the output and start at the row given as global argument
-# process_data(chunk_size=250000, process_input=True, process_output=True, verbose=True)
-
-# starting_indexes = [0, 1000000, 2000000, 3000000, 4000000]
-# for starting_index in starting_indexes:
-#     process_data(start_row=starting_index, chunk_size=250000, process_input=False, process_output=True, verbose=True)
+# process_data(chunk_size=2, verbose=True)
 
 
+
+# ________________________________________________________________________________________________________
+# SINGLE THREAD, MULTIPLE TERMINALS:
+chunksize = 50000
+threads = 4
+
+starting_2d = get_starting_indexes(chunksize=chunksize, threads=threads)
+starting_2d = np.array(starting_2d)
+starting_2d = np.transpose(starting_2d)
+
+for starting_index in starting_2d[START_FROM]:
+    process_data(start_row=starting_index, chunk_size=chunksize, verbose=True)
+# ________________________________________________________________________________________________________
+
+
+
+# ________________________________________________________________________________________________________
 # Multi threaded Approach
+# chunksize = 50000
+# threads = 8
 
-starting_2d = get_starting_indexes(chunksize=50000, threads=8)
+# starting_2d = get_starting_indexes(chunksize=chunksize, threads=threads)
 
-for serie in starting_2d:
-    def process_data_threaded(start_row):
-        process_data(start_row=start_row, chunk_size=250000, process_input=True, process_output=True, verbose=False)
+# # for serie in starting_2d:
+# def process_data_threaded(start_row):
+#     process_data(start_row=start_row, chunk_size=chunksize, verbose=False)
 
-    threads = []
+# threads = []
 
-    for starting_index in serie:
-        thread = threading.Thread(target=process_data_threaded, args=(starting_index,))
-        threads.append(thread)
-        thread.start()
+# for starting_index in serie:
+#     thread = threading.Thread(target=process_data_threaded, args=(starting_index,))
+#     threads.append(thread)
+#     thread.start()
 
-    # Wait for all threads to finish
-    for thread in threads:
-        thread.join()
+# # Wait for all threads to finish
+# for thread in threads:
+#     thread.join()
 
-    print("\n\n!!!DONE!!! \n\n", serie, "\n\n\n")
+# print("\n\n!!!DONE!!! \n\n", serie, "\n\n\n")
+# ________________________________________________________________________________________________________
