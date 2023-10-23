@@ -88,7 +88,7 @@ def remove_nans_in_vector(folder_path, remove):
 
         if len(nan_indices) > 0:
             print("Indexes of vectors containing NaN values in ", vector_file)
-            
+
             print("count of the nan indices: ", len(nan_indices))
 
             for index in nan_indices:
@@ -112,4 +112,3 @@ folder_path = "Data/VectorsTest/"
 # get_vectors_info(folder_path)
 # get_global_counts()
 remove_nans_in_vector(folder_path, remove=False) # List the indices without removing
-

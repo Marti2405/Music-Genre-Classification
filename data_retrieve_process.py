@@ -23,17 +23,17 @@ import threading
 START_FROM = int(input("Start from: "))
 
 
-def data_clean(text): 
+def data_clean(text):
     """
     Cleans the input text by removing metadata, stopwords, and punctuation.
-    
+
     Args:
     text (str): The input text to be cleaned.
 
     Returns:
     list: A list of cleaned words.
     """
-    
+
     text = re.sub(r'\[.*?\]', '', text) # Remove metadata from text using regular expressions
     text.replace('\n',' ')
 
@@ -43,7 +43,7 @@ def data_clean(text):
     for word in words: # for each word in the tokenized list of words from the sentence
         if word.lower() not in stopwords.words('english') and word[0] not in string.punctuation and word.lower() not in text_result: # if the word not a stop word, word not already in vocab and word not punctuation
             text_result.append(word.lower())
-        
+
 
     return text_result
 
@@ -72,7 +72,7 @@ def process_data(start_row=START_FROM, chunk_size=250000, process_input=True ,pr
     if verbose:
         print(f"---- Starting from {count}")
 
-    
+
     if process_input and not word2vec_is_loaded:
         # Load the Word2Vec model only if input has to be processed
         word2vec_model = api.load("word2vec-google-news-300")
@@ -83,8 +83,8 @@ def process_data(start_row=START_FROM, chunk_size=250000, process_input=True ,pr
     timed = time.time()
 
     # Iterate through the CSV file in chunks
-    for chunk in pd.read_csv('./Data/song_lyrics.csv', skiprows=range(1, start_row), chunksize=chunk_size): 
-        
+    for chunk in pd.read_csv('./Data/song_lyrics.csv', skiprows=range(1, start_row), chunksize=chunk_size):
+
         # declare arrays of input and output
         input_data = []
         input_data_non_normalized = []
@@ -95,7 +95,7 @@ def process_data(start_row=START_FROM, chunk_size=250000, process_input=True ,pr
 
         # for each row (song)
         for index, row in chunk.iterrows():
-            
+
             # Show progress
             progress+=1
             if progress%500==0:
@@ -105,9 +105,9 @@ def process_data(start_row=START_FROM, chunk_size=250000, process_input=True ,pr
 
 
             # Process each row
-            
+
             if row['language']=="en": # if the lyrics are in english
-                
+
                 if process_input:
                     ##_________________Input processing_________________
                     sum_word_vecs = np.zeros(300) # initialise sum of word vectors
@@ -122,14 +122,12 @@ def process_data(start_row=START_FROM, chunk_size=250000, process_input=True ,pr
 
                     if total_number_words==0:
                         tot_vec=np.zeros(300)
+                        input_data_non_normalized.append(tot_vec)
+                        input_data.append(tot_vec) # append the normalized vector to the inpu_data list
                     else:
                         tot_vec = sum_word_vecs/total_number_words # mean of all the vectors
-                    
-                    input_data_non_normalized.append(tot_vec)
-                    try:
-                        input_data.append(tot_vec/np.linalg.norm(tot_vec)) # append the normalized vector to the input_data list
-                    except():
-                        print(f"Issue at index: {progress}")
+                        input_data_non_normalized.append(tot_vec)
+                        input_data.append(tot_vec/np.linalg.norm(tot_vec)) # append the normalized vector to the inpu_data list
                     ##____________________________________________________________________
 
                 if process_output:
@@ -145,7 +143,7 @@ def process_data(start_row=START_FROM, chunk_size=250000, process_input=True ,pr
                     elif tag == 'rb':
                         output_data.append(rb_vector)
                     elif tag == 'country':
-                        output_data.append(country_vector)                
+                        output_data.append(country_vector)
                     else:
                         output_data.append(other_vector)
                     ##____________________________________________________________________
@@ -154,17 +152,17 @@ def process_data(start_row=START_FROM, chunk_size=250000, process_input=True ,pr
             np.save(f'Data/InputData_V2/I_data_chunk_{count}.npy', np.array(input_data)) # save input data matrix
             np.save(f'Data/InputDataNotNorm_V2/I_data_chunk_{count}.npy', np.array(input_data_non_normalized)) # save input data matrix
         if process_output:
-            np.save(f'Data/OutputData_V2/O_data_chunk_{count}.npy', np.array(output_data)) # save output data matrix    
-        
+            np.save(f'Data/OutputData_V2/O_data_chunk_{count}.npy', np.array(output_data)) # save output data matrix
+
 
         print(f"Number of rows processed: from {start_row} to {count} = {(count-start_row)}") # print how many rows have been processed
-        
+
 
         break
 
     print("DONE. CHUNK COMPLETED!!!")
-        
-    
+
+
 
 
 # ______________________________EXECUTION OF THE FUNCTIONS________________________________________________
