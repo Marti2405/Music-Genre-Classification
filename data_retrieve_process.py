@@ -49,7 +49,7 @@ def data_clean(text):
 
     
 
-def process_data(start_row=START_FROM, chunk_size=250000, process_input=True ,process_output=True, verbose=True):
+def process_data(start_row=START_FROM, chunk_size=250000, verbose=True):
     if verbose:
         print(f"---- Chunk size = {chunk_size}")
 
@@ -70,11 +70,11 @@ def process_data(start_row=START_FROM, chunk_size=250000, process_input=True ,pr
 
     word2vec_model = None
     
-    if process_input:
-        # Load the Word2Vec model only if input has to be processed
-        word2vec_model = api.load("word2vec-google-news-300")
-        if verbose:
-            print("---- Loading of Word2Vec model completed")
+    
+    # Load the Word2Vec model
+    word2vec_model = api.load("word2vec-google-news-300")
+    if verbose:
+        print("---- Loading of Word2Vec model completed")
 
 
     timed = time.time()
@@ -105,29 +105,27 @@ def process_data(start_row=START_FROM, chunk_size=250000, process_input=True ,pr
             
             if row['language']=="en": # if the lyrics are in english
                 
-                if process_input:
-                    ##_________________Input processing_________________
-                    sum_word_vecs = np.zeros(300) # initialise sum of word vectors
-                    total_number_words = 0 # number of words transformed to vectors
+                
+                ##_________________Input processing_________________
+                sum_word_vecs = np.zeros(300) # initialise sum of word vectors
+                total_number_words = 0 # number of words transformed to vectors
 
-                    for word_to_vectorize in data_clean(row['lyrics']): # for each word in the cleaned, tokenized list from the lyrics
-                        try: # vectorise the word
-                            sum_word_vecs+= word2vec_model[word_to_vectorize]
-                            total_number_words+=1
-                        except:
-                            pass
+                for word_to_vectorize in data_clean(row['lyrics']): # for each word in the cleaned, tokenized list from the lyrics
+                    try: # vectorise the word
+                        sum_word_vecs+= word2vec_model[word_to_vectorize]
+                        total_number_words+=1
+                    except:
+                        pass
 
-                    if total_number_words==0:
-                        tot_vec=np.zeros(300)
-                        input_data_non_normalized.append(tot_vec)
-                        input_data.append(tot_vec) # append the normalized vector to the inpu_data list
-                    else:
-                        tot_vec = sum_word_vecs/total_number_words # mean of all the vectors
-                        input_data_non_normalized.append(tot_vec)
-                        input_data.append(tot_vec/np.linalg.norm(tot_vec)) # append the normalized vector to the inpu_data list
+                if total_number_words>=10: # if the lyrics contain more than 10 words
+                    
+                
+                    tot_vec = sum_word_vecs/total_number_words # mean of all the vectors
+                    input_data_non_normalized.append(tot_vec)
+                    input_data.append(tot_vec/np.linalg.norm(tot_vec)) # append the normalized vector to the inpu_data list
                     ##____________________________________________________________________
 
-                if process_output:
+                
                     ##_________________Output processing_________________
                     # process output data
                     tag = row['tag']
@@ -145,17 +143,15 @@ def process_data(start_row=START_FROM, chunk_size=250000, process_input=True ,pr
                         output_data.append(other_vector)
                     ##____________________________________________________________________
 
-        if process_input:
-            np.save(f'Data/InputData/I_data_chunk_{count}.npy', np.array(input_data)) # save input data matrix
-            np.save(f'Data/InputDataNotNorm/I_data_chunk_{count}.npy', np.array(input_data_non_normalized)) # save input data matrix
-        if process_output:
-            np.save(f'Data/OutputData/O_data_chunk_{count}.npy', np.array(output_data)) # save output data matrix    
+        np.save(f'Data/InputData/I_data_chunk_{count}.npy', np.array(input_data)) # save input data matrix
+        np.save(f'Data/InputDataNotNorm/I_data_chunk_{count}.npy', np.array(input_data_non_normalized)) # save input data matrix
+        np.save(f'Data/OutputData/O_data_chunk_{count}.npy', np.array(output_data)) # save output data matrix    
         
 
         print(f"Number of rows processed: from {start_row} to {count} = {(count-start_row)}") # print how many rows have been processed
         
 
-        break
+        break # §§§§§§§§§§§§§§§§§§§§§§    REMOVE WHEN REVIEWING  §§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§"""
 
     print("DONE. CHUNK COMPLETED!!!")
         
