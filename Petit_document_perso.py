@@ -1,6 +1,8 @@
 import numpy as np
 import pandas as pd
 import os
+import time
+import nltk
 
 
 def get_vectors_info(vector_folder):
@@ -48,25 +50,111 @@ def get_vectors_info(vector_folder):
 
 
 def get_global_counts():
+    # ________________________________________________________________________________________________
+    # COUNT THE NUMBER OF NO LYRICS SONGS PER TAG IN ITERATIONS
 
-    # Specify the column you want to load
-    columns_to_load = ['tag']
+    # # Specify the chunk size.
+    # chunk_size = 100000
 
-    # Load the CSV data with only the 'tag' column
-    df = pd.read_csv('Data/song_lyrics.csv', usecols=columns_to_load)
+    # # Initialize an empty list to store the results DataFrames.
+    # result_dfs = []
 
-    # Count the tags
-    tag_counts = df['tag'].value_counts()
+    # # Iterate through the CSV file in chunks.
+    # for chunk in pd.read_csv('Data/song_lyrics.csv', usecols=['lyrics', 'tag'], chunksize=chunk_size):
+    #     # Group by 'tag' and count the empty 'lyrics' in the current chunk.
+    #     empty_lyrics_counts = chunk.groupby('tag')['lyrics'].apply(lambda x: (x == '').sum()).reset_index()
+        
+    #     # Append the result DataFrame for the current chunk to the list.
+    #     result_dfs.append(empty_lyrics_counts)
+        
+    #     # Print the intermediate results for the current chunk.
+    #     print("Intermediate Result for Chunk:")
+    #     print(pd.concat(result_dfs))
+    #     print('\n')
 
-    # Convert the result to a NumPy array
-    tag_counts_array = tag_counts.reset_index().values
+    # # Concatenate all the result DataFrames.
+    # result_df = pd.concat(result_dfs, ignore_index=True)
 
-    # Sort by count in descending order
-    sorted_tags = tag_counts_array[np.argsort(tag_counts_array[:, 1])[::-1]]
+    # # Group the results by 'tag' to get the final count.
+    # final_result = result_df.groupby('tag')['lyrics'].sum().reset_index()
 
-    # Print the tags and their counts
-    for tag, count in sorted_tags:
-        print(f"Tag: {tag}, Count: {count}")
+    # # Print the final result.
+    # print("Final Result:")
+    # print(final_result)
+    # ________________________________________________________________________________________________
+
+
+
+    # ________________________________________________________________________________________________
+    # COUNT THE NUMBER OF NO LYRICS SONGS
+    # # Load the CSV data with only the 'tag' column
+    # df = pd.read_csv('Data/song_lyrics.csv', usecols=['lyrics', 'tag'])
+
+    # start_time = time.time()
+
+
+    # # Group by 'tag' and count the empty 'lyrics' using the sum of boolean masks.
+    # empty_lyrics_counts = df.groupby('tag')['lyrics'].apply(lambda x: (x == '').sum()).reset_index()
+
+    # # Rename the columns for clarity.
+    # empty_lyrics_counts.columns = ['tag', 'empty_lyrics_count']
+
+    # # Now, empty_lyrics_counts contains the count of songs with empty 'lyrics' for each 'tag'.
+    # print(empty_lyrics_counts)
+
+    # end_time = time.time()
+    # # Calculate and print the total time taken.
+    # total_time = end_time - start_time
+    # print("Total Time Taken:", total_time, "seconds")
+    # ________________________________________________________________________________________________
+
+
+
+
+    # ________________________________________________________________________________________________
+    # Read the CSV file
+    df = pd.read_csv('Data/song_lyrics.csv', usecols=['lyrics', 'tag'])
+
+    # Add a new column with the length of 'lyrics'
+    df['lyrics_length'] = df['lyrics'].apply(len)
+
+    # Sort the DataFrame by the 'lyrics_length' column in ascending order
+    df = df.sort_values(by='lyrics_length')
+
+    # Drop the 'lyrics_length' column if you don't need it anymore
+    df = df.drop(columns='lyrics_length')
+
+    # Convert the DataFrame to a NumPy array
+    data_array = df.to_numpy()
+
+    # Save the NumPy array to an .npy file
+    np.save('sorted_lyrics.npy', data_array)
+    # ________________________________________________________________________________________________
+
+
+
+
+    # ________________________________________________________________________________________________
+    # COUNT THE NUMBER OF SONGS PER TAG
+    # # Specify the column you want to load
+    # columns_to_load = ['tag']
+
+    # # Load the CSV data with only the 'tag' column
+    # df = pd.read_csv('Data/song_lyrics.csv', usecols=columns_to_load)
+
+    # # Count the tags
+    # tag_counts = df['tag'].value_counts()
+
+    # # Convert the result to a NumPy array
+    # tag_counts_array = tag_counts.reset_index().values
+
+    # # Sort by count in descending order
+    # sorted_tags = tag_counts_array[np.argsort(tag_counts_array[:, 1])[::-1]]
+
+    # # Print the tags and their counts
+    # for tag, count in sorted_tags:
+    #     print(f"Tag: {tag}, Count: {count}")
+    # ________________________________________________________________________________________________
 
 
 def remove_nans_in_vector(folder_path, remove):
@@ -107,8 +195,11 @@ def remove_nans_in_vector(folder_path, remove):
 
 
 
+words = nltk.tokenize.wordpunct_tokenize("")
+
+
 
 folder_path = "Data/VectorsTest/"
 # get_vectors_info(folder_path)
-# get_global_counts()
-remove_nans_in_vector(folder_path, remove=False) # List the indices without removing
+# get_global_counts() #Broken!
+# remove_nans_in_vector(folder_path, remove=False) # List the indices without removing
