@@ -47,7 +47,11 @@ def data_clean(text):
 
     return text_result
 
-    
+word2vec_model = None
+# For concurrent program, load w2v only once
+word2vec_model = api.load("word2vec-google-news-300")
+print("---- Loading of Word2Vec model completed")
+word2vec_is_loaded = True
 
 def process_data(start_row=START_FROM, chunk_size=250000, process_input=True ,process_output=True, verbose=True):
     if verbose:
@@ -68,9 +72,8 @@ def process_data(start_row=START_FROM, chunk_size=250000, process_input=True ,pr
     if verbose:
         print(f"---- Starting from {count}")
 
-    word2vec_model = None
     
-    if process_input:
+    if process_input and not word2vec_is_loaded:
         # Load the Word2Vec model only if input has to be processed
         word2vec_model = api.load("word2vec-google-news-300")
         if verbose:
@@ -123,7 +126,10 @@ def process_data(start_row=START_FROM, chunk_size=250000, process_input=True ,pr
                         tot_vec = sum_word_vecs/total_number_words # mean of all the vectors
                     
                     input_data_non_normalized.append(tot_vec)
-                    input_data.append(tot_vec/np.linalg.norm(tot_vec)) # append the normalized vector to the inpu_data list
+                    try:
+                        input_data.append(tot_vec/np.linalg.norm(tot_vec)) # append the normalized vector to the input_data list
+                    except():
+                        print(f"Issue at index: {progress}")
                     ##____________________________________________________________________
 
                 if process_output:
@@ -145,10 +151,10 @@ def process_data(start_row=START_FROM, chunk_size=250000, process_input=True ,pr
                     ##____________________________________________________________________
 
         if process_input:
-            np.save(f'Data/InputData/I_data_chunk_{count}.npy', np.array(input_data)) # save input data matrix
-            np.save(f'Data/InputDataNotNorm/I_data_chunk_{count}.npy', np.array(input_data_non_normalized)) # save input data matrix
+            np.save(f'Data/InputData_V2/I_data_chunk_{count}.npy', np.array(input_data)) # save input data matrix
+            np.save(f'Data/InputDataNotNorm_V2/I_data_chunk_{count}.npy', np.array(input_data_non_normalized)) # save input data matrix
         if process_output:
-            np.save(f'Data/OutputData/O_data_chunk_{count}.npy', np.array(output_data)) # save output data matrix    
+            np.save(f'Data/OutputData_V2/O_data_chunk_{count}.npy', np.array(output_data)) # save output data matrix    
         
 
         print(f"Number of rows processed: from {start_row} to {count} = {(count-start_row)}") # print how many rows have been processed
@@ -165,18 +171,20 @@ def process_data(start_row=START_FROM, chunk_size=250000, process_input=True ,pr
 
 
 # Call function wich will process only the output and start at the row given as global argument
-# process_data(chunk_size=250000, process_input=False, process_output=True)
+process_data(chunk_size=250000, process_input=True, process_output=True, verbose=True)
 
-starting_indexes = [0, 1000000, 2000000, 3000000, 4000000]
-for starting_index in starting_indexes:
-    process_data(start_row=starting_index, chunk_size=250000, process_input=False, process_output=True, verbose=True)
+# starting_indexes = [0, 1000000, 2000000, 3000000, 4000000]
+# for starting_index in starting_indexes:
+#     process_data(start_row=starting_index, chunk_size=250000, process_input=False, process_output=True, verbose=True)
 
 
 # Multi threaded Approach
-# starting_indexes = [0, 1000000, 2000000, 3000000, 4000000]
+# starting_indexes = [0, 1000000, 2000000, 3000000, 4000000] # Done
+# starting_indexes = [250000, 1250000, 2250000, 3250000, 3500000, 4250000] # Full of NaN ?
+# # starting_indexes = [500000, 1750000, 2750000, 3750000, 4750000, 5000000]
 
 # def process_data_threaded(start_row):
-#     process_data(start_row=start_row, chunk_size=250000, process_input=False, process_output=True, verbose=False)
+#     process_data(start_row=start_row, chunk_size=250000, process_input=True, process_output=True, verbose=False)
 
 # threads = []
 
@@ -189,4 +197,4 @@ for starting_index in starting_indexes:
 # for thread in threads:
 #     thread.join()
 
-print("DONE!")
+# print("DONE!")
