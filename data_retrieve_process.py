@@ -23,17 +23,17 @@ import threading
 START_FROM = int(input("Start from: "))
 
 
-def data_clean(text): 
+def data_clean(text):
     """
     Cleans the input text by removing metadata, stopwords, and punctuation.
-    
+
     Args:
     text (str): The input text to be cleaned.
 
     Returns:
     list: A list of cleaned words.
     """
-    
+
     text = re.sub(r'\[.*?\]', '', text) # Remove metadata from text using regular expressions
     text.replace('\n',' ')
 
@@ -43,11 +43,15 @@ def data_clean(text):
     for word in words: # for each word in the tokenized list of words from the sentence
         if word.lower() not in stopwords.words('english') and word[0] not in string.punctuation and word.lower() not in text_result: # if the word not a stop word, word not already in vocab and word not punctuation
             text_result.append(word.lower())
-        
+
 
     return text_result
 
-    
+word2vec_model = None
+# For concurrent program, load w2v only once
+word2vec_model = api.load("word2vec-google-news-300")
+print("---- Loading of Word2Vec model completed")
+word2vec_is_loaded = True
 
 def process_data(start_row=START_FROM, chunk_size=250000, verbose=True):
     if verbose:
@@ -72,16 +76,17 @@ def process_data(start_row=START_FROM, chunk_size=250000, verbose=True):
     
     
     # Load the Word2Vec model
-    word2vec_model = api.load("word2vec-google-news-300")
-    if verbose:
-        print("---- Loading of Word2Vec model completed")
+    if not word2vec_is_loaded:
+        word2vec_model = api.load("word2vec-google-news-300")
+        if verbose:
+            print("---- Loading of Word2Vec model completed")
 
 
     timed = time.time()
 
     # Iterate through the CSV file in chunks
-    for chunk in pd.read_csv('./Data/song_lyrics.csv', skiprows=range(1, start_row), chunksize=chunk_size): 
-        
+    for chunk in pd.read_csv('./Data/song_lyrics.csv', skiprows=range(1, start_row), chunksize=chunk_size):
+
         # declare arrays of input and output
         input_data = []
         input_data_non_normalized = []
@@ -92,7 +97,7 @@ def process_data(start_row=START_FROM, chunk_size=250000, verbose=True):
 
         # for each row (song)
         for index, row in chunk.iterrows():
-            
+
             # Show progress
             progress+=1
             if progress%500==0:
@@ -102,7 +107,7 @@ def process_data(start_row=START_FROM, chunk_size=250000, verbose=True):
 
 
             # Process each row
-            
+
             if row['language']=="en": # if the lyrics are in english
                 
                 
@@ -138,7 +143,7 @@ def process_data(start_row=START_FROM, chunk_size=250000, verbose=True):
                     elif tag == 'rb':
                         output_data.append(rb_vector)
                     elif tag == 'country':
-                        output_data.append(country_vector)                
+                        output_data.append(country_vector)
                     else:
                         output_data.append(other_vector)
                     ##____________________________________________________________________
@@ -149,31 +154,33 @@ def process_data(start_row=START_FROM, chunk_size=250000, verbose=True):
         
 
         print(f"Number of rows processed: from {start_row} to {count} = {(count-start_row)}") # print how many rows have been processed
-        
+
 
         break # §§§§§§§§§§§§§§§§§§§§§§    REMOVE WHEN REVIEWING  §§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§"""
 
     print("DONE. CHUNK COMPLETED!!!")
-        
-    
+
+
 
 
 # ______________________________EXECUTION OF THE FUNCTIONS________________________________________________
 
 
 # Call function wich will process only the output and start at the row given as global argument
-# process_data(chunk_size=250000, process_input=False, process_output=True)
+process_data(chunk_size=250000, process_input=True, process_output=True, verbose=True)
 
-starting_indexes = [0, 1000000, 2000000, 3000000, 4000000]
-for starting_index in starting_indexes:
-    process_data(start_row=starting_index, chunk_size=250000, process_input=False, process_output=True, verbose=True)
+# starting_indexes = [0, 1000000, 2000000, 3000000, 4000000]
+# for starting_index in starting_indexes:
+#     process_data(start_row=starting_index, chunk_size=250000, process_input=False, process_output=True, verbose=True)
 
 
 # Multi threaded Approach
-# starting_indexes = [0, 1000000, 2000000, 3000000, 4000000]
+# starting_indexes = [0, 1000000, 2000000, 3000000, 4000000] # Done
+# starting_indexes = [250000, 1250000, 2250000, 3250000, 3500000, 4250000] # Full of NaN ?
+# # starting_indexes = [500000, 1750000, 2750000, 3750000, 4750000, 5000000]
 
 # def process_data_threaded(start_row):
-#     process_data(start_row=start_row, chunk_size=250000, process_input=False, process_output=True, verbose=False)
+#     process_data(start_row=start_row, chunk_size=250000, process_input=True, process_output=True, verbose=False)
 
 # threads = []
 
@@ -186,4 +193,4 @@ for starting_index in starting_indexes:
 # for thread in threads:
 #     thread.join()
 
-print("DONE!")
+# print("DONE!")

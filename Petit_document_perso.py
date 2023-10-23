@@ -8,7 +8,7 @@ def get_vectors_info(vector_folder):
 
     # Load all the output vectors
     data_list = []
-    folder_path = 'Data/OutputData'
+    folder_path = 'Data/OutputData_V2'
     for file_name in os.listdir(folder_path):
         if file_name.endswith('.npy'):
             file_path2 = os.path.join(folder_path, file_name)
@@ -69,8 +69,8 @@ def get_global_counts():
         print(f"Tag: {tag}, Count: {count}")
 
 
-def remove_nans_in_vector(remove):
-    folder_path = 'Data/Vectors/'
+def remove_nans_in_vector(folder_path, remove):
+    folder_path = folder_path
 
     file_paths = [folder_path + 'X_train.npy'
                   , folder_path + 'X_test.npy'
@@ -88,9 +88,11 @@ def remove_nans_in_vector(remove):
 
         if len(nan_indices) > 0:
             print("Indexes of vectors containing NaN values in ", vector_file)
-            for index in nan_indices:
-                print(index)
 
+            print("count of the nan indices: ", len(nan_indices))
+
+            for index in nan_indices:
+                # print(index)
                 if remove:
                     # Replace NaN vector with a ero vector of same shape
                     zeros_vector = np.zeros(array.shape[1])
@@ -106,7 +108,7 @@ def remove_nans_in_vector(remove):
 
 
 
-# get_vectors_info("Data/Vectors/")
+folder_path = "Data/VectorsTest/"
+# get_vectors_info(folder_path)
 # get_global_counts()
-remove_nans_in_vector(remove=True)
-
+remove_nans_in_vector(folder_path, remove=False) # List the indices without removing
