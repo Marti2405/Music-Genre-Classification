@@ -106,7 +106,7 @@ def remove_nans_in_vector(remove):
 
 
 
-get_vectors_info("Data/VectorsBalanced/")
+# get_vectors_info("Data/Vectors/")
 # get_global_counts()
-# remove_nans_in_vector(remove=True)
+remove_nans_in_vector(remove=True)
 

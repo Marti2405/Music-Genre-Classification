@@ -119,11 +119,12 @@ def process_data(start_row=START_FROM, chunk_size=250000, process_input=True ,pr
 
                     if total_number_words==0:
                         tot_vec=np.zeros(300)
+                        input_data_non_normalized.append(tot_vec)
+                        input_data.append(tot_vec) # append the normalized vector to the inpu_data list
                     else:
                         tot_vec = sum_word_vecs/total_number_words # mean of all the vectors
-                    
-                    input_data_non_normalized.append(tot_vec)
-                    input_data.append(tot_vec/np.linalg.norm(tot_vec)) # append the normalized vector to the inpu_data list
+                        input_data_non_normalized.append(tot_vec)
+                        input_data.append(tot_vec/np.linalg.norm(tot_vec)) # append the normalized vector to the inpu_data list
                     ##____________________________________________________________________
 
                 if process_output:
