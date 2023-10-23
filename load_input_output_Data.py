@@ -24,8 +24,8 @@ def balance_data(X, Y, n, cats):
 
 # Paths to the input and output data folders
 # input_data_folder = 'Data/InputDataNotNorm'
-input_data_folder = 'Data/InputData'
-output_data_folder = 'Data/OutputData'
+input_data_folder = 'Data/InputData_V2'
+output_data_folder = 'Data/OutputData_V2'
 
 # Function to load and concatenate data from folder
 def load_and_concatenate_data(folder_path):
@@ -43,14 +43,14 @@ X = load_and_concatenate_data(input_data_folder)
 Y = load_and_concatenate_data(output_data_folder)
 
 # Create balanced vectors of shape (size*categories)
-X,Y = balance_data(X, Y, n=100000, cats=3)
+X,Y = balance_data(X, Y, n=50000, cats=5)
 
 # Split the data into train, validation, and test sets
 X_train, X_temp, Y_train, Y_temp = train_test_split(X, Y, test_size=0.2, random_state=42)
 X_validate, X_test, Y_validate, Y_test = train_test_split(X_temp, Y_temp, test_size=0.5, random_state=42)
 
 # Ensure the directory exists, create it if not
-save_directory = 'Data/VectorsBalanced'
+save_directory = 'Data/VectorsTest'
 os.makedirs(save_directory, exist_ok=True)
 
 # Save the arrays to .npy files
