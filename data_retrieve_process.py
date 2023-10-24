@@ -115,7 +115,8 @@ def process_data(start_row=START_FROM, chunk_size=250000, verbose=True):
                         sum_word_vecs+= word2vec_model[word_to_vectorize]
                         total_number_words+=1
                     except Exception as e:
-                        print(f"failed on: {word_to_vectorize} error: {e}")
+                        # print(f"failed on: {word_to_vectorize} error: {e}")
+                        pass
 
                 if total_number_words>=10: # if the lyrics contain more than 10 words
                     
