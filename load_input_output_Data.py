@@ -46,7 +46,7 @@ Y = load_and_concatenate_data(output_data_folder)
 
 # Create balanced vectors of shape (size*categories)
 #                                 cats= [pop, rap, rock, rb, country, others]
-X,Y = balance_data(X, Y, n=84000, cats=[1,1,1,1,1,0])
+X,Y = balance_data(X, Y, n=50000, cats=[1,1,1,1,1,1])
 
 # Split the data into train, validation, and test sets
 X_train, X_temp, Y_train, Y_temp = train_test_split(X, Y, test_size=0.2, random_state=42)
