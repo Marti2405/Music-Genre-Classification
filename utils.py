@@ -63,10 +63,10 @@ def get_global_counts():
     # for chunk in pd.read_csv('Data/song_lyrics.csv', usecols=['lyrics', 'tag'], chunksize=chunk_size):
     #     # Group by 'tag' and count the empty 'lyrics' in the current chunk.
     #     empty_lyrics_counts = chunk.groupby('tag')['lyrics'].apply(lambda x: (x == '').sum()).reset_index()
-        
+
     #     # Append the result DataFrame for the current chunk to the list.
     #     result_dfs.append(empty_lyrics_counts)
-        
+
     #     # Print the intermediate results for the current chunk.
     #     print("Intermediate Result for Chunk:")
     #     print(pd.concat(result_dfs))
@@ -199,8 +199,7 @@ words = nltk.tokenize.wordpunct_tokenize("")
 
 
 
-folder_path = "Data/Vectors/"
-get_vectors_info(folder_path)
-
+folder_path = "Data/VectorsBalanced_Max/"
+# get_vectors_info(folder_path)
 # get_global_counts() #Broken!
-# remove_nans_in_vector(folder_path, remove=True) # List the indices without removing
+remove_nans_in_vector(folder_path, remove=False) # List the indices without removing

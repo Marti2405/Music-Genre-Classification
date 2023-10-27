@@ -53,7 +53,7 @@ X_train, X_temp, Y_train, Y_temp = train_test_split(X, Y, test_size=0.2, random_
 X_validate, X_test, Y_validate, Y_test = train_test_split(X_temp, Y_temp, test_size=0.5, random_state=42)
 
 # Ensure the directory exists, create it if not
-save_directory = 'Data/VectorsPopRock'
+save_directory = 'Data/Vectors'
 os.makedirs(save_directory, exist_ok=True)
 
 # Save the arrays to .npy files
