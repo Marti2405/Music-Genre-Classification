@@ -30,9 +30,10 @@ Certainly, here is a structured outline for each section of your report:
 - Details about how the dataset was labeled or annotated (1 paragraph)
 
 **4. Method**
-- Clear explanation of the methodology employed, including any specific libraries or tools used (2-3 paragraphs)
 - Brief discussion of the preprocessing steps undertaken (1 paragraph)
 - Explanation of the dataset division into training and testing sets (if applicable) (1 paragraph)
+- Clear explanation of the methodology employed, including any specific libraries or tools used (2-3 paragraphs)
+
 
 **5. Experiment and Results**
 - Description of the experimental setup and evaluation process (1-2 paragraphs)
