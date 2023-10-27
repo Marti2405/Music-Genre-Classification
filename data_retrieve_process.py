@@ -156,7 +156,6 @@ def process_data(start_row=START_FROM, chunk_size=250000, verbose=True):
         print(f"Number of empty songs encountered: {empty_songs_counter}")
 
 
-        break # §§§§§§§§§§§§§§§§§§§§§§    REMOVE WHEN REVIEWING  §§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§"""
 
     print("DONE. CHUNK COMPLETED!!!")
 
