@@ -1,5 +1,6 @@
 """
-This file reads the CSV file ontaining the lyrics data by chunks.
+This file reads the CSV file containing the lyrics data by chunks.
+The path to the CSV file should be ./Data/song_lyrics.csv
 For each row the data is processed.
 This file saves the processed data chunks in the folders: Data/InputData & Data/OutputData
 This file saves the last chunk processed in a log file.
