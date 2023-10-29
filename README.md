@@ -1,51 +1,43 @@
-# Music-Genre-Classification
+# Melody Meets Lyrics: A Neural Network Approach to Music Genre Classification
 
-# To do
-- [ ] Write the report for the project.
-- [ ] Faire le nouveau fichier de requirements
+This repository contains the code for a music genre classification project focusing on accurately predicting the genre of songs based on their lyrical content. 
+
+The achieved accuracy for six different classes is **61.5%**. To test the model, you can run the Jupyter Notebook `0_TRY_MODEL.ipynb`.
+
+For more detailed information and insights, please refer to the full README file.
+
+## Problem Statement 
+**Can the genre of a song be accurately
+predicted based solely on the analysis of its
+lyrical content?**
+
+## Method
+
+The project leverages various techniques for data collection, preprocessing, feature engineering, and model development. The [dataset](https://www.kaggle.com/datasets/carlosgdcj/genius-song-lyrics-with-language-information) comprises song lyrics with corresponding genre labels obtained from Kaggle (~5m). 
+
+The data preprocessing involves the removal of metadata, non-English songs, songs with limited lyrics, stopwords, and punctuation. 
+
+Feature engineering involved the use of Google's Word2Vec, a widely recognized and powerful tool for word embedding, to create a mean vector for each song lyrics. Vector used as input of our model.
+
+The model consists in a feed-forward neural network architecture (Input-500-250-Dropout-50-Output), with the hidden layers utilizing hyperbolic tangent (tanh) activation functions and the output layer a softmax activation function to predict the class probabilities for the multi-class classification task.
+
+Different configurations and settings to optimize the neural network architecture where explored, ensuring the best possible performance given the complexity of the classification task. Multiple iterations and adjustments were made to fine-tune the model and improve its predictive capabilities, leading to the achieved accuracy of 61.5%.
+
+## Results and Conclusion
+
+The project achieved an overall accuracy of 61.5%, with precision scores ranging from 33.53% to 85.73% across different genres. 
+
+**Performance Metrics**:
+
+![Performance Metrics Plot](Perf.png)
+
+**Confusion Matrix**:
+
+![Confusion Matrix](conf.png)
+
+Despite the "acceptable" accuracy achieved, it is essential to acknowledge that the task of music genre classification is inherently complex and multifaceted. Music genres often involve intricate combinations of melody, rhythm, instruments used, and other factors beyond just the lyrical content. The achieved accuracy highlights the efficacy of the applied techniques within the constraints of analyzing song lyrics alone. However, it also underscores the inherent limitations of relying solely on textual data for genre classification, emphasizing the need for a more holistic approach encompassing a broader set of musical features.
 
 
+## License
 
-# Plan Report
-Certainly, here is a structured outline for each section of your report:
-
-**Abstract**
-1. Context and background of the project (1-2 sentences)
-2. Objectives and goals of the research (1-2 sentences)
-3. Methods and approach used to tackle the problem (1-2 sentences)
-4. Key findings and outcomes of the project (1-2 sentences)
-5. Significance and implications of the research (1-2 sentences)
-
-**1. Introduction**
-- Clear statement of the problem or research question (1 paragraph)
-- Brief overview of the motivation behind the project (1 paragraph)
-- Reference to any key papers that inspired the work (if applicable) (1 paragraph)
-
-**2. Related Work**
-- Summary of relevant papers and their approaches (2-3 paragraphs)
-- Comparison between their methods and outcomes and the approach used in the current project (1-2 paragraphs)
-
-**3. Data**
-- Description of the dataset used, including its source and composition (2-3 paragraphs)
-- Details about how the dataset was labeled or annotated (1 paragraph)
-
-**4. Method**
-- Brief discussion of the preprocessing steps undertaken (1 paragraph)
-- Explanation of the dataset division into training and testing sets (if applicable) (1 paragraph)
-- Clear explanation of the methodology employed, including any specific libraries or tools used (2-3 paragraphs)
-
-
-**5. Experiment and Results**
-- Description of the experimental setup and evaluation process (1-2 paragraphs)
-- Detailed report of the project's outcomes, including accuracy and other pertinent evaluation metrics (2-3 paragraphs)
-- Discussion of any notable findings from the analysis (1-2 paragraphs)
-
-**6. Discussion and Conclusion**
-- Assessment of the project, addressing any errors and their potential causes (1-2 paragraphs)
-- Discussion of method limitations and dataset issues (1 paragraph)
-- Consideration of alternative approaches and potential solutions (1 paragraph)
-- Brief exploration of ethical implications and societal impacts (1 paragraph)
-- Summary of the main conclusions drawn from the research (1 paragraph)
-
-**7. References**
-- Ensure each reference provides sufficient information for easy retrieval.
+This project is licensed under the MIT License - see the [LICENSE.md](LICENSE.md) file for details.
