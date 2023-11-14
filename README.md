@@ -11,6 +11,9 @@ For more detailed information and insights, please refer to the full README file
 predicted based solely on the analysis of its
 lyrical content?**
 
+## Research Paper
+The comprehensive research paper detailing the methodology, experiments, and findings of this project is included in the repository. Please refer to the [Research Paper](./paper.pdf) for an in-depth analysis of the project, including detailed descriptions of the methodologies employed, experimental setups, results, and discussions.
+
 ## Method
 
 The project leverages various techniques for data collection, preprocessing, feature engineering, and model development. The [dataset](https://www.kaggle.com/datasets/carlosgdcj/genius-song-lyrics-with-language-information) comprises song lyrics with corresponding genre labels obtained from Kaggle (~5m). 
@@ -29,11 +32,11 @@ The project achieved an overall accuracy of 61.5%, with precision scores ranging
 
 **Performance Metrics**:
 
-![Performance Metrics Plot](Perf.png)
+![Performance Metrics Plot](Images/Perf.png)
 
 **Confusion Matrix**:
 
-![Confusion Matrix](conf.png)
+![Confusion Matrix](Images/conf.png)
 
 Despite the "acceptable" accuracy achieved, it is essential to acknowledge that the task of music genre classification is inherently complex and multifaceted. Music genres often involve intricate combinations of melody, rhythm, instruments used, and other factors beyond just the lyrical content. The achieved accuracy highlights the efficacy of the applied techniques within the constraints of analyzing song lyrics alone. However, it also underscores the inherent limitations of relying solely on textual data for genre classification, emphasizing the need for a more holistic approach encompassing a broader set of musical features.
 
