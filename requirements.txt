@@ -12,5 +12,5 @@ scipy==1.11.3
 six==1.16.0
 smart-open==6.4.0
 threadpoolctl==3.2.0
-tqdm==4.66.1
+tqdm==4.66.3
 tzdata==2023.3
